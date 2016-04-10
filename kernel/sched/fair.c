@@ -1687,6 +1687,10 @@ int sched_set_boost(int enable)
 	return ret;
 }
 
+#ifdef CONFIG_THUNDERPLUG_CONTROL
+EXPORT_SYMBOL_GPL(sched_set_boost);
+#endif
+
 int sched_boost_handler(struct ctl_table *table, int write,
 		void __user *buffer, size_t *lenp,
 		loff_t *ppos)
@@ -3236,7 +3240,7 @@ static inline void __update_tg_runnable_avg(struct sched_avg *sa,
 	long contrib;
 
 	/* The fraction of a cpu used by this cfs_rq */
-	contrib = div_u64(sa->runnable_avg_sum << NICE_0_SHIFT,
+	contrib = div_u64((u64)sa->runnable_avg_sum << NICE_0_SHIFT,
 			  sa->runnable_avg_period + 1);
 	contrib -= cfs_rq->tg_runnable_contrib;
 
